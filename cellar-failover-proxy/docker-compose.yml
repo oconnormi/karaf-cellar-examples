@@ -1,0 +1,32 @@
+version: '2'
+services:
+  proxy:
+    image: mkroli/karaf:4.0
+    ports:
+      - "8181:8181"
+    volumes:
+      - ./nodes/deploy/:/deploy
+      - ./nodes/entrypoint.sh:/opt/entrypoint/entrypoint.sh
+      - ./proxy/configure.sh:/opt/entrypoint/configure.sh
+    links:
+      - node1
+      - node2
+    entrypoint: /opt/entrypoint/entrypoint.sh
+  node1:
+    image: mkroli/karaf:4.0
+    ports:
+      - "8182:8181"
+    volumes:
+      - ./nodes/deploy/:/deploy
+      - ./nodes/entrypoint.sh:/opt/entrypoint/entrypoint.sh
+      - ./nodes/configure.sh:/opt/entrypoint/configure.sh
+    entrypoint: /opt/entrypoint/entrypoint.sh
+  node2:
+    image: mkroli/karaf:4.0
+    ports:
+      - "8183:8181"
+    volumes:
+      - ./nodes/deploy/:/deploy
+      - ./nodes/entrypoint.sh:/opt/entrypoint/entrypoint.sh
+      - ./nodes/configure.sh:/opt/entrypoint/configure.sh
+    entrypoint: /opt/entrypoint/entrypoint.sh
