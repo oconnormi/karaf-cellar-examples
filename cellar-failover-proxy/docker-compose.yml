@@ -1,18 +1,20 @@
 version: '2'
 services:
-  proxy:
+  load-balancer:
     image: oconnormi/karaf:4.0
     ports:
       - "8181:8181"
     volumes:
       - ./nodes/deploy/:/app/deploy
       - ./nodes/entrypoint.sh:/app/entrypoint/entrypoint.sh
-      - ./proxy/configure.sh:/app/entrypoint/configure.sh
+      - ./load-balancer/configure.sh:/app/entrypoint/configure.sh
+      - ./load-balancer/etc/org.apache.karaf.cellar.node.cfg:/app/etc/org.apache.karaf.cellar.node.cfg
+      - ./load-balancer/etc/org.apache.karaf.cellar.groups.cfg:/app/etc/org.apache.karaf.cellar.groups.cfg
     links:
-      - node1
-      - node2
+      - karaf1
+      - karaf2
     entrypoint: /app/entrypoint/entrypoint.sh
-  node1:
+  karaf1:
     image: oconnormi/karaf:4.0
     ports:
       - "8182:8181"
@@ -20,8 +22,9 @@ services:
       - ./nodes/deploy/:/app/deploy
       - ./nodes/entrypoint.sh:/app/entrypoint/entrypoint.sh
       - ./nodes/configure.sh:/app/entrypoint/configure.sh
+      - ./nodes/etc/org.apache.karaf.cellar.node.cfg:/app/etc/org.apache.karaf.cellar.node.cfg
     entrypoint: /app/entrypoint/entrypoint.sh
-  node2:
+  karaf2:
     image: oconnormi/karaf:4.0
     ports:
       - "8183:8181"
@@ -29,4 +32,5 @@ services:
       - ./nodes/deploy/:/app/deploy
       - ./nodes/entrypoint.sh:/app/entrypoint/entrypoint.sh
       - ./nodes/configure.sh:/app/entrypoint/configure.sh
+      - ./nodes/etc/org.apache.karaf.cellar.node.cfg:/app/etc/org.apache.karaf.cellar.node.cfg
     entrypoint: /app/entrypoint/entrypoint.sh
